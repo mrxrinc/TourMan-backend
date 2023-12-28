@@ -1,64 +1,64 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+import mongoose from "mongoose";
+const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
   firstName: {
     type: String,
-    required: [true, 'FirstName is required']
+    required: [true, "FirstName is required"],
   },
   lastName: {
     type: String,
-    required: [true, 'LastName is required']
-  }, 
+    required: [true, "LastName is required"],
+  },
   email: {
     type: String,
-    required: [true, 'Email is required']
+    required: [true, "Email is required"],
   },
   password: {
     type: String,
-    required: [true, 'Password is required']
+    required: [true, "Password is required"],
   },
   birthday: {
-    type: Array
+    type: Array,
   },
   mobile: {
-    type: String
+    type: String,
   },
   sex: {
     type: String,
-    default: 'male'
+    default: "male",
   },
   location: {
-    type: String
+    type: String,
   },
   avatar: {
     type: String,
   },
   thumb: {
-    type: String
+    type: String,
   },
   about: {
-    type: String
+    type: String,
   },
   job: {
-    type: String
+    type: String,
   },
   education: {
-    type: String
+    type: String,
   },
   languages: {
     type: Array,
-    default: ['FA']
+    default: ["FA"],
   },
   verifiedInfo: {
-    type: String
+    type: String,
   },
   verified: {
     type: Boolean,
-    default: false
+    default: false,
   },
   token: {
-    type: String
+    type: String,
   },
   registerDate: {
     type: String,
@@ -72,10 +72,10 @@ const UserSchema = new Schema({
       title: String,
       text: String,
       date: String,
-      archive: Boolean
-    }
-  ]
-})
+      archive: Boolean,
+    },
+  ],
+});
 
-const User = mongoose.model('user', UserSchema)
-module.exports = User
+const User = mongoose.model("user", UserSchema);
+export default User;

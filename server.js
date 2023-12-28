@@ -1,22 +1,14 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-require("dotenv/config");
+import express from "express";
+import bodyParser from "body-parser";
+import apiRouter from "./routes/api.js";
+import { PORT } from "./config/environments.js";
+import "./config/db.js";
 
 const app = express();
 
-const PORT = process.env.PORT || 3000;
-const MONGO_URI = process.env.MONGO_URI;
-
-mongoose.connect(MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-mongoose.Promise = global.Promise;
-
 app.use("/uploads", express.static("uploads")); // access permission
 app.use(bodyParser.json());
-app.use("/api", require("./routes/api"));
+app.use("/api", apiRouter);
 
 app.use((err, req, res, next) => {
   res.status(422).send({ error: err._message });

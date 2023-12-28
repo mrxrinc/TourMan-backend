@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+import mongoose from "mongoose";
+const Schema = mongoose.Schema;
 
 const ReviewSchema = new Schema({
   parent: String,
@@ -8,8 +8,8 @@ const ReviewSchema = new Schema({
   avatar: String,
   date: String,
   rate: Number,
-  comment: String
-})
+  comment: String,
+});
 
-const Review = mongoose.model('review', ReviewSchema)
-module.exports = Review
+const Review = mongoose.model("review", ReviewSchema);
+export default Review;

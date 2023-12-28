@@ -1,16 +1,16 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+import mongoose from "mongoose";
+const Schema = mongoose.Schema;
 
 const HelpSchema = new Schema({
   question: {
     type: String,
-    required: [true, 'Question is required']
+    required: [true, "Question is required"],
   },
   answer: {
     type: String,
-    required: [true, 'Answer is required']
-  }
-})
+    required: [true, "Answer is required"],
+  },
+});
 
-const Help = mongoose.model('help', HelpSchema)
-module.exports = Help
+const Help = mongoose.model("help", HelpSchema);
+export default Help;

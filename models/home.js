@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+import mongoose from "mongoose";
+const Schema = mongoose.Schema;
 
 const HomeSchema = new Schema({
   title: String,
@@ -8,14 +8,14 @@ const HomeSchema = new Schema({
     id: String,
     fullName: String,
     avatar: String,
-    verified: Boolean
+    verified: Boolean,
   },
   homeType: {
     entire: { type: Boolean, default: true },
     privateRoom: { type: Boolean, default: false },
-    sharedRoom: { type: Boolean, default: false }
+    sharedRoom: { type: Boolean, default: false },
   },
-  capacity: { 
+  capacity: {
     adults: { type: Number, default: 1 },
     children: { type: Number, default: 0 },
   },
@@ -26,7 +26,7 @@ const HomeSchema = new Schema({
     details: String,
     guestAccessibility: String,
     neighborhood: String,
-    accessToCityGoods: String
+    accessToCityGoods: String,
   },
   price: Number,
   minimumNights: { type: Number, default: 1 },
@@ -44,13 +44,13 @@ const HomeSchema = new Schema({
     kitchen: { type: Boolean, default: false },
     hairDryer: { type: Boolean, default: false },
     firstAids: { type: Boolean, default: false },
-    smokeDetector:{ type: Boolean, default: false }
+    smokeDetector: { type: Boolean, default: false },
   },
   location: {
     latitude: Number,
-    longitude:Number,
-    latitudeDelta:Number,
-    longitudeDelta: Number
+    longitude: Number,
+    latitudeDelta: Number,
+    longitudeDelta: Number,
   },
   province: String,
   visitHours: [Number, Number],
@@ -58,7 +58,7 @@ const HomeSchema = new Schema({
     celebrationAllowed: { type: Boolean, default: false },
     petsAllowed: { type: Boolean, default: false },
     smokingAllowed: { type: Boolean, default: false },
-    description: String
+    description: String,
   },
   cancelation: { type: Number, default: 1 },
   instanceReserve: { type: Boolean, default: false },
@@ -67,8 +67,8 @@ const HomeSchema = new Schema({
   reviewsCount: { type: Number, default: 0 },
   verified: { type: Boolean, default: false },
   luxury: { type: Boolean, default: false },
-  popular: { type: Boolean, default: false }
-})
+  popular: { type: Boolean, default: false },
+});
 
-const Home = mongoose.model('home', HomeSchema)
-module.exports = Home
+const Home = mongoose.model("home", HomeSchema);
+export default Home;

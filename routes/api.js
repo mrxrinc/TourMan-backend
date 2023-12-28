@@ -1,21 +1,20 @@
-const express = require("express");
-const jwt = require("jsonwebtoken");
-const multer = require("multer");
-const path = require("path");
-const jalaali = require("jalaali-js");
-const User = require("../models/user");
-const router = express.Router();
-const Privacy = require("../models/privacy");
-const Help = require("../models/help");
-const Feedback = require("../models/feedback");
-const ReportUser = require("../models/reportUser");
-const Home = require("../models/home");
-const Review = require("../models/review");
-const Reserve = require("../models/reserve");
-const General = require("../models/general");
-const baseURL = "http://192.168.1.6:3000/";
+import express from "express";
+import jwt from "jsonwebtoken";
+import multer from "multer";
+import path from "path";
+import jalaali from "jalaali-js";
+import User from "../models/user.js";
+import Privacy from "../models/privacy.js";
+import Help from "../models/help.js";
+import Feedback from "../models/feedback.js";
+import ReportUser from "../models/reportUser.js";
+import Home from "../models/home.js";
+import Review from "../models/review.js";
+import Reserve from "../models/reserve.js";
+import General from "../models/general.js";
+import { SECRET_KEY, BASE_URL } from "../config/environments.js";
 
-const SECRET_KEY = process.env.JWT_SECRET;
+const router = express.Router();
 
 let persianDate = jalaali.toJalaali(new Date());
 persianDate = `${persianDate.jy}/${persianDate.jm}/${persianDate.jd}`;
@@ -52,7 +51,7 @@ router.get("/users/:id", validateUser, (req, res) => {
     if (err) {
       res.sendStatus(403);
     } else {
-      // everytime getting a user, it needs to calculate the reviews information
+      // every time getting a user, it needs to calculate the reviews information
       Review.find({ parent: req.params.id }).then((reviews) => {
         if (reviews.length) {
           // if user has Reviews
@@ -97,7 +96,7 @@ router.post("/users/signup", (req, res, next) => {
     lastName: req.body.lastName.trim(),
     password: req.body.password.trim(),
     email: req.body.email.trim().toLowerCase(),
-    avatar: `${baseURL}uploads/userAvatars/default_profile_photo.png`,
+    avatar: `${BASE_URL}uploads/userAvatars/default_profile_photo.png`,
     registerDate: persianDate,
   };
   User.find({ email: safeInputData.email })
@@ -201,7 +200,7 @@ router.post("/users/avatar", validateUser, (req, res, next) => {
     if (err) {
       res.send(err);
     } else {
-      const avatarPath = baseURL + req.file.path.replace(/\\/g, "/");
+      const avatarPath = BASE_URL + req.file.path.replace(/\\/g, "/");
       res.send(avatarPath);
     }
   });
@@ -624,7 +623,7 @@ router.post("/homes/image", validateUser, (req, res, next) => {
     if (err) {
       res.send(err);
     } else {
-      const avatarPath = baseURL + req.file.path.replace(/\\/g, "/");
+      const avatarPath = BASE_URL + req.file.path.replace(/\\/g, "/");
       res.send(avatarPath);
     }
   });
@@ -821,4 +820,4 @@ router.put("/explore/:id", validateUser, (req, res, next) => {
   });
 });
 
-module.exports = router;
+export default router;

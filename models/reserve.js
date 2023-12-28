@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+import mongoose from "mongoose";
+const Schema = mongoose.Schema;
 
 const ReserveSchema = new Schema({
   homeId: String,
@@ -16,8 +16,8 @@ const ReserveSchema = new Schema({
   totalNights: Number,
   totalPrice: Number,
   reservedDate: String,
-  message: String
-})
+  message: String,
+});
 
-const Reserve = mongoose.model('reserve', ReserveSchema)
-module.exports = Reserve
+const Reserve = mongoose.model("reserve", ReserveSchema);
+export default Reserve;
