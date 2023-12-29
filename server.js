@@ -1,25 +1,13 @@
-import express from "express";
-import bodyParser from "body-parser";
-import apiRoute from "./routes/api.js";
-import userRoute from "./routes/user.js";
-import { PORT } from "./config/environments.js";
-import "./config/db.js";
+import express from 'express';
+import routes from './routes/index.js';
+import { API_PATH, PORT } from './config/environments.js';
+import { applyMiddlewares } from './middlewares/index.js';
+import './config/db.js';
 
 const app = express();
+applyMiddlewares(app);
 
-app.use("/uploads", express.static("uploads")); // access permission
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/users", (req, res, next) => {
-  console.log("user route");
-  res.status(200).send("user route");
-  next();
-});
-app.use("/", apiRoute);
-
-app.use((err, req, res, next) => {
-  res.status(422).send({ error: err._message });
-});
+app.use(API_PATH, routes);
 
 app.listen(PORT, () => {
   console.log(`==========> SERVER IS READY ON PORT ${PORT}!`);
