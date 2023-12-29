@@ -1,12 +1,18 @@
+import path from 'path';
+
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import multer from 'multer';
-import { validateUser } from '../utils/validations.js';
+
+import { SECRET_KEY, URL } from '../config/environments.js';
+import { User, Review } from '../models/index.js';
+import calculateReviews from '../utils/calculateReviews.js';
+import persianDate from '../utils/time.js';
+import validateUser from '../utils/validations.js';
 
 const router = express.Router();
 
 router.get('/:id', validateUser, (req, res) => {
-  console.log('YOU ARE IN USER ROUTE');
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       console.log(err);
@@ -57,7 +63,7 @@ router.post('/signup', (req, res, next) => {
     lastName: req.body.lastName.trim(),
     password: req.body.password.trim(),
     email: req.body.email.trim().toLowerCase(),
-    avatar: `${BASE_URL}uploads/userAvatars/default_profile_photo.png`,
+    avatar: `${URL}uploads/userAvatars/default_profile_photo.png`,
     registerDate: persianDate,
   };
   User.find({ email: safeInputData.email })

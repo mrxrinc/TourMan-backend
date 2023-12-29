@@ -1,7 +1,8 @@
 import express from 'express';
-import routes from './routes/index.js';
+
 import { API_PATH, PORT } from './config/environments.js';
-import { applyMiddlewares } from './middlewares/index.js';
+import applyMiddlewares from './middlewares/index.js';
+import routes from './routes/index.js';
 import './config/db.js';
 
 const app = express();

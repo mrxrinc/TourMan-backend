@@ -1,7 +1,11 @@
+/* eslint-disable no-unused-expressions */
+import path from 'path';
+
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import multer from 'multer';
-import path from 'path';
+
+import { SECRET_KEY, URL } from '../config/environments.js';
 import {
   User,
   Privacy,
@@ -13,10 +17,9 @@ import {
   Reserve,
   General,
 } from '../models/index.js';
-import { SECRET_KEY, URL } from '../config/environments.js';
-import { calculateReviews, validateUser } from '../utils/validations.js';
-import { persianDate } from '../utils/time.js';
-
+import calculateReviews from '../utils/calculateReviews.js';
+import persianDate from '../utils/time.js';
+import validateUser from '../utils/validations.js';
 const router = express.Router();
 
 router.get('/privacy', (req, res) => {
@@ -326,7 +329,7 @@ router.get('/homes/:id', validateUser, (req, res) => {
     if (err) {
       res.sendStatus(403);
     } else {
-      // everytime getting a user, it needs to calculate the reviews information
+      // every time getting a user, it needs to calculate the reviews information
       Review.find({ parent: req.params.id }).then((reviews) => {
         if (reviews.length) {
           // if home has Reviews

@@ -1,19 +1,4 @@
-export function calculateReviews(reviews) {
-  const rateArray = [];
-  let reviewsCount = 0;
-  for (const item in reviews) {
-    rateArray.push(reviews[item].rate);
-    reviewsCount++;
-  }
-  const ratingSum = rateArray.reduce((total, val) => total + val);
-  const overallRate = ratingSum / rateArray.length;
-  return {
-    reviewsCount,
-    overallRate,
-  };
-}
-
-export function validateUser(req, res, next) {
+export default function validateUser(req, res, next) {
   const bearerHeader = req.headers.authorization;
   if (typeof bearerHeader !== 'undefined') {
     const bearer = bearerHeader.split(' ');

@@ -1,7 +1,9 @@
 import jalaali from 'jalaali-js';
 
 function generatePersianDate() {
-  const persianDate = jalaali.toJalaali(new Date());
-  return `${persianDate.jy}/${persianDate.jm}/${persianDate.jd}`;
+  const jDate = jalaali.toJalaali(new Date());
+  return `${jDate.jy}/${jDate.jm}/${jDate.jd}`;
 }
-export const persianDate = generatePersianDate();
+const persianDate = generatePersianDate();
+
+export default persianDate;
