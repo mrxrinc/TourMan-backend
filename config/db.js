@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-import { MONGO_URI } from "./environments.js";
+import { MONGO_URI } from './environments.js';
 
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,

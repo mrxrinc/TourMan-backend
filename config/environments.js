@@ -1,4 +1,4 @@
-import "dotenv/config";
+import 'dotenv/config';
 
 export const MONGO_URI = process.env.MONGO_URI;
 export const SECRET_KEY = process.env.JWT_SECRET;

@@ -1,12 +1,12 @@
-import express from "express";
-import jwt from "jsonwebtoken";
-import multer from "multer";
-import { validateUser } from "../utils/validations.js";
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import multer from 'multer';
+import { validateUser } from '../utils/validations.js';
 
 const router = express.Router();
 
-router.get("/:id", validateUser, (req, res) => {
-  console.log("YOU ARE IN USER ROUTE");
+router.get('/:id', validateUser, (req, res) => {
+  console.log('YOU ARE IN USER ROUTE');
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       console.log(err);
@@ -22,7 +22,7 @@ router.get("/:id", validateUser, (req, res) => {
               User.findOne({ _id: req.params.id }).then((data) => {
                 res.send(data);
               });
-            }
+            },
           );
         } else {
           // if user has'nt any Reviews
@@ -35,7 +35,7 @@ router.get("/:id", validateUser, (req, res) => {
               User.findOne({ _id: req.params.id }).then((data) => {
                 res.send(data);
               });
-            }
+            },
           );
         }
       });
@@ -43,7 +43,7 @@ router.get("/:id", validateUser, (req, res) => {
   });
 });
 
-router.post("/signup", (req, res, next) => {
+router.post('/signup', (req, res, next) => {
   const tokenData = {
     firstName: req.body.firstName.trim(),
     lastName: req.body.lastName.trim(),
@@ -63,11 +63,11 @@ router.post("/signup", (req, res, next) => {
   User.find({ email: safeInputData.email })
     .then((result) => {
       if (result.length) {
-        res.json({ userState: "duplicate" });
+        res.json({ userState: 'duplicate' });
       } else {
         console.log(safeInputData);
         User.create(safeInputData).then((user) => {
-          console.log("================");
+          console.log('================');
           res.send(user);
         });
       }
@@ -75,7 +75,7 @@ router.post("/signup", (req, res, next) => {
     .catch((err) => console.log(err));
 });
 
-router.post("/signin", (req, res) => {
+router.post('/signin', (req, res) => {
   const email = req.body.email.trim().toLowerCase();
   const password = req.body.password.trim();
   User.find({ email, password })
@@ -83,13 +83,13 @@ router.post("/signin", (req, res) => {
       if (user.length) {
         res.json(user[0]);
       } else {
-        res.json({ userState: "noUser" });
+        res.json({ userState: 'noUser' });
       }
     })
-    .catch(() => console.log("Mongo connection Error"));
+    .catch(() => console.log('Mongo connection Error'));
 });
 
-router.put("/update/:id", validateUser, (req, res, next) => {
+router.put('/update/:id', validateUser, (req, res, next) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -105,7 +105,7 @@ router.put("/update/:id", validateUser, (req, res, next) => {
   });
 });
 
-router.put("/message/:id", validateUser, (req, res, next) => {
+router.put('/message/:id', validateUser, (req, res, next) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -120,7 +120,7 @@ router.put("/message/:id", validateUser, (req, res, next) => {
           msgs.push(data);
           User.findByIdAndUpdate(
             { _id: req.params.id },
-            { messages: msgs }
+            { messages: msgs },
           ).then(() => {
             User.findOne({ _id: req.params.id }).then((user) => {
               res.send(user.messages);
@@ -134,7 +134,7 @@ router.put("/message/:id", validateUser, (req, res, next) => {
 
 const userStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./uploads/userAvatars");
+    cb(null, './uploads/userAvatars');
   },
   filename: (req, file, cb) => {
     const randomString = Math.random().toString(36).substring(2);
@@ -142,26 +142,26 @@ const userStorage = multer.diskStorage({
   },
 });
 const userFileFilter = (req, file, cb) => {
-  if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
     cb(null, true);
   } else {
-    cb("ERROR : NOT Allowed FORMAT");
+    cb('ERROR : NOT Allowed FORMAT');
   }
 };
-var userAvatarUpload = multer({
+const userAvatarUpload = multer({
   storage: userStorage,
   limits: { fileSize: 1024 * 1024 * 6 },
   fileFilter: userFileFilter,
-}).single("userAvatar");
+}).single('userAvatar');
 
-router.post("/avatar", validateUser, (req, res, next) => {
+router.post('/avatar', validateUser, (req, res, next) => {
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
   userAvatarUpload(req, res, (err) => {
     if (err) {
       res.send(err);
     } else {
-      const avatarPath = URL + req.file.path.replace(/\\/g, "/");
+      const avatarPath = URL + req.file.path.replace(/\\/g, '/');
       res.send(avatarPath);
     }
   });

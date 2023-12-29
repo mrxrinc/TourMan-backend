@@ -1,7 +1,7 @@
-import express from "express";
-import jwt from "jsonwebtoken";
-import multer from "multer";
-import path from "path";
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import multer from 'multer';
+import path from 'path';
 import {
   User,
   Privacy,
@@ -12,20 +12,20 @@ import {
   Review,
   Reserve,
   General,
-} from "../models/index.js";
-import { SECRET_KEY, URL } from "../config/environments.js";
-import { calculateReviews, validateUser } from "../utils/validations.js";
-import { persianDate } from "../utils/time.js";
+} from '../models/index.js';
+import { SECRET_KEY, URL } from '../config/environments.js';
+import { calculateReviews, validateUser } from '../utils/validations.js';
+import { persianDate } from '../utils/time.js';
 
 const router = express.Router();
 
-router.get("/privacy", (req, res) => {
+router.get('/privacy', (req, res) => {
   Privacy.find({}).then((data) => {
     res.send(data);
   });
 });
 
-router.post("/privacy", validateUser, (req, res) => {
+router.post('/privacy', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -34,12 +34,12 @@ router.post("/privacy", validateUser, (req, res) => {
         .then((data) => {
           res.send(data);
         })
-        .catch(() => console.log("Error in creating Privacy item"));
+        .catch(() => console.log('Error in creating Privacy item'));
     }
   });
 });
 
-router.get("/help", validateUser, (req, res) => {
+router.get('/help', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -51,7 +51,7 @@ router.get("/help", validateUser, (req, res) => {
   });
 });
 
-router.post("/feedback", validateUser, (req, res) => {
+router.post('/feedback', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -74,7 +74,7 @@ router.post("/feedback", validateUser, (req, res) => {
   });
 });
 
-router.post("/reportUser", validateUser, (req, res) => {
+router.post('/reportUser', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -88,12 +88,12 @@ router.post("/reportUser", validateUser, (req, res) => {
   });
 });
 
-router.get("/homes", validateUser, (req, res) => {
+router.get('/homes', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
     } else {
-      console.log("Query: ", req.query);
+      console.log('Query: ', req.query);
       const q = req.query;
       // console.log('PRICE ====> ', q.price[1])
       let payload = {};
@@ -102,154 +102,154 @@ router.get("/homes", validateUser, (req, res) => {
         const keys = Object.keys(q);
         keys.forEach((item) => {
           switch (item) {
-            case "host":
+            case 'host':
               q.host !== null
-                ? (payload = { ...payload, "host.id": q.host })
+                ? (payload = { ...payload, 'host.id': q.host })
                 : null;
               break;
-            case "province":
-              q.province !== "all"
+            case 'province':
+              q.province !== 'all'
                 ? (payload = { ...payload, province: q.province })
                 : null;
               break;
-            case "rooms":
-              q.rooms !== "1"
+            case 'rooms':
+              q.rooms !== '1'
                 ? (payload = { ...payload, rooms: q.rooms })
                 : null;
               break;
-            case "beds":
-              q.beds !== "1" ? (payload = { ...payload, beds: q.beds }) : null;
+            case 'beds':
+              q.beds !== '1' ? (payload = { ...payload, beds: q.beds }) : null;
               break;
-            case "bathrooms":
-              q.bathrooms !== "1"
+            case 'bathrooms':
+              q.bathrooms !== '1'
                 ? (payload = { ...payload, bathrooms: q.bathrooms })
                 : null;
               break;
-            case "adults":
-              q.adults !== "1"
+            case 'adults':
+              q.adults !== '1'
                 ? (payload = {
                     ...payload,
-                    "capacity.adults": { $gte: q.adults },
+                    'capacity.adults': { $gte: q.adults },
                   })
                 : null;
               break;
-            case "children":
-              q.children !== "0"
+            case 'children':
+              q.children !== '0'
                 ? (payload = {
                     ...payload,
-                    "capacity.children": { $gte: q.children },
+                    'capacity.children': { $gte: q.children },
                   })
                 : null;
               break;
-            case "instanceReserve":
-              q.instanceReserve !== "false"
+            case 'instanceReserve':
+              q.instanceReserve !== 'false'
                 ? (payload = { ...payload, instanceReserve: q.instanceReserve })
                 : null;
               break;
-            case "entire":
-              q.entire !== "false"
-                ? (payload = { ...payload, "homeType.entire": q.entire })
+            case 'entire':
+              q.entire !== 'false'
+                ? (payload = { ...payload, 'homeType.entire': q.entire })
                 : null;
               break;
-            case "privateRoom":
-              q.privateRoom !== "false"
+            case 'privateRoom':
+              q.privateRoom !== 'false'
                 ? (payload = {
                     ...payload,
-                    "homeType.privateRoom": q.privateRoom,
+                    'homeType.privateRoom': q.privateRoom,
                   })
                 : null;
               break;
-            case "sharedRoom":
-              q.sharedRoom !== "false"
+            case 'sharedRoom':
+              q.sharedRoom !== 'false'
                 ? (payload = {
                     ...payload,
-                    "homeType.sharedRoom": q.sharedRoom,
+                    'homeType.sharedRoom': q.sharedRoom,
                   })
                 : null;
               break;
-            case "luxury":
-              q.luxury !== "false"
+            case 'luxury':
+              q.luxury !== 'false'
                 ? (payload = { ...payload, luxury: q.luxury })
                 : null;
               break;
-            case "wifi":
-              q.wifi !== "false"
-                ? (payload = { ...payload, "amenities.wifi": q.wifi })
+            case 'wifi':
+              q.wifi !== 'false'
+                ? (payload = { ...payload, 'amenities.wifi': q.wifi })
                 : null;
               break;
-            case "tv":
-              q.tv !== "false"
-                ? (payload = { ...payload, "amenities.tv": q.tv })
+            case 'tv':
+              q.tv !== 'false'
+                ? (payload = { ...payload, 'amenities.tv': q.tv })
                 : null;
               break;
-            case "accessories":
-              q.accessories !== "false"
+            case 'accessories':
+              q.accessories !== 'false'
                 ? (payload = {
                     ...payload,
-                    "amenities.accessories": q.accessories,
+                    'amenities.accessories': q.accessories,
                   })
                 : null;
               break;
-            case "kitchen":
-              q.kitchen !== "false"
-                ? (payload = { ...payload, "amenities.kitchen": q.kitchen })
+            case 'kitchen':
+              q.kitchen !== 'false'
+                ? (payload = { ...payload, 'amenities.kitchen': q.kitchen })
                 : null;
               break;
-            case "washingMachine":
-              q.washingMachine !== "false"
+            case 'washingMachine':
+              q.washingMachine !== 'false'
                 ? (payload = {
                     ...payload,
-                    "amenities.washingMachine": q.washingMachine,
+                    'amenities.washingMachine': q.washingMachine,
                   })
                 : null;
               break;
-            case "cooler":
-              q.cooler !== "false"
-                ? (payload = { ...payload, "amenities.cooler": q.cooler })
+            case 'cooler':
+              q.cooler !== 'false'
+                ? (payload = { ...payload, 'amenities.cooler': q.cooler })
                 : null;
               break;
-            case "parkingLot":
-              q.parkingLot !== "false"
+            case 'parkingLot':
+              q.parkingLot !== 'false'
                 ? (payload = {
                     ...payload,
-                    "amenities.parkingLot": q.parkingLot,
+                    'amenities.parkingLot': q.parkingLot,
                   })
                 : null;
               break;
-            case "celebrationAllowed":
-              q.celebrationAllowed !== "false"
+            case 'celebrationAllowed':
+              q.celebrationAllowed !== 'false'
                 ? (payload = {
                     ...payload,
-                    "homeRules.celebrationAllowed": q.celebrationAllowed,
+                    'homeRules.celebrationAllowed': q.celebrationAllowed,
                   })
                 : null;
               break;
-            case "smokingAllowed":
-              q.smokingAllowed !== "false"
+            case 'smokingAllowed':
+              q.smokingAllowed !== 'false'
                 ? (payload = {
                     ...payload,
-                    "homeRules.smokingAllowed": q.smokingAllowed,
+                    'homeRules.smokingAllowed': q.smokingAllowed,
                   })
                 : null;
               break;
-            case "petsAllowed":
-              q.petsAllowed !== "false"
+            case 'petsAllowed':
+              q.petsAllowed !== 'false'
                 ? (payload = {
                     ...payload,
-                    "homeRules.petsAllowed": q.petsAllowed,
+                    'homeRules.petsAllowed': q.petsAllowed,
                   })
                 : null;
               break;
-            case "popular":
-              q.popular !== "false"
+            case 'popular':
+              q.popular !== 'false'
                 ? (payload = { ...payload, popular: q.popular })
                 : null;
               break;
-            case "not":
+            case 'not':
               payload = { ...payload, _id: { $ne: q.not } };
               break;
-            case "price":
-              q.price !== ["10", "1000"]
+            case 'price':
+              q.price !== ['10', '1000']
                 ? (payload = {
                     ...payload,
                     $and: [
@@ -264,7 +264,7 @@ router.get("/homes", validateUser, (req, res) => {
           }
         });
       }
-      console.log("payload ==> ", payload);
+      console.log('payload ==> ', payload);
       Home.find(payload)
         .sort({ _id: -1 })
         .then((data) => {
@@ -276,7 +276,7 @@ router.get("/homes", validateUser, (req, res) => {
   });
 });
 
-router.post("/homes", validateUser, (req, res) => {
+router.post('/homes', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -290,7 +290,7 @@ router.post("/homes", validateUser, (req, res) => {
   });
 });
 
-router.put("/homes/:id", validateUser, (req, res) => {
+router.put('/homes/:id', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -306,7 +306,7 @@ router.put("/homes/:id", validateUser, (req, res) => {
   });
 });
 
-router.delete("/homes", validateUser, (req, res) => {
+router.delete('/homes', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -321,7 +321,7 @@ router.delete("/homes", validateUser, (req, res) => {
   });
 });
 
-router.get("/homes/:id", validateUser, (req, res) => {
+router.get('/homes/:id', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -336,7 +336,7 @@ router.get("/homes/:id", validateUser, (req, res) => {
               Home.findOne({ _id: req.params.id }).then((data) => {
                 res.send(data);
               });
-            }
+            },
           );
         } else {
           // if home has'nt any Reviews
@@ -349,7 +349,7 @@ router.get("/homes/:id", validateUser, (req, res) => {
               Home.findOne({ _id: req.params.id }).then((data) => {
                 res.send(data);
               });
-            }
+            },
           );
         }
       });
@@ -357,13 +357,13 @@ router.get("/homes/:id", validateUser, (req, res) => {
   });
 });
 
-router.get("/homes/getInArray/:array", validateUser, (req, res) => {
+router.get('/homes/getInArray/:array', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
     } else {
       console.log(req.params.array);
-      const array = req.params.array.split(",");
+      const array = req.params.array.split(',');
       Home.find({ _id: { $in: array } })
         .sort({ _id: -1 })
         .then((data) => {
@@ -374,7 +374,7 @@ router.get("/homes/getInArray/:array", validateUser, (req, res) => {
   });
 });
 
-router.post("/reviews", validateUser, (req, res) => {
+router.post('/reviews', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -392,7 +392,7 @@ router.post("/reviews", validateUser, (req, res) => {
   });
 });
 
-router.get("/reviews/:id", validateUser, (req, res) => {
+router.get('/reviews/:id', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -409,7 +409,7 @@ router.get("/reviews/:id", validateUser, (req, res) => {
 
 const homeStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./uploads/homeImages");
+    cb(null, './uploads/homeImages');
   },
   filename: (req, file, cb) => {
     const randomString = Math.random().toString(36).substring(2);
@@ -417,32 +417,32 @@ const homeStorage = multer.diskStorage({
   },
 });
 const homeFileFilter = (req, file, cb) => {
-  if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
     cb(null, true);
   } else {
-    cb("ERROR : NOT Allowed FORMAT");
+    cb('ERROR : NOT Allowed FORMAT');
   }
 };
-var homeAvatarUpload = multer({
+const homeAvatarUpload = multer({
   storage: homeStorage,
   limits: { fileSize: 1024 * 1024 * 3 }, // means 3MB
   fileFilter: homeFileFilter,
-}).single("homeImage");
+}).single('homeImage');
 
-router.post("/homes/image", validateUser, (req, res, next) => {
+router.post('/homes/image', validateUser, (req, res, next) => {
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
   homeAvatarUpload(req, res, (err) => {
     if (err) {
       res.send(err);
     } else {
-      const avatarPath = URL + req.file.path.replace(/\\/g, "/");
+      const avatarPath = URL + req.file.path.replace(/\\/g, '/');
       res.send(avatarPath);
     }
   });
 });
 
-router.post("/reserve", validateUser, (req, res) => {
+router.post('/reserve', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -470,23 +470,23 @@ router.post("/reserve", validateUser, (req, res) => {
                       { _id: data.homeId },
                       {
                         reservedDays: newResDays,
-                      }
+                      },
                     ).then((updatedHome) => {
                       // sending the reserve details
                       res.send(data);
                     });
                   });
-                }
+                },
               );
             })
             .catch((err) => console.log(err));
         })
-        .catch(() => console.log("Error in creating Reserve item"));
+        .catch(() => console.log('Error in creating Reserve item'));
     }
   });
 });
 
-router.get("/reserve/:host", validateUser, (req, res) => {
+router.get('/reserve/:host', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -501,14 +501,14 @@ router.get("/reserve/:host", validateUser, (req, res) => {
   });
 });
 
-router.get("/reserve/duplicateCheck/:guest/:home", validateUser, (req, res) => {
+router.get('/reserve/duplicateCheck/:guest/:home', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
     } else {
       Reserve.find({ guestId: req.params.guest, homeId: req.params.home })
         .then((data) => {
-          console.log("we got the duplicate!", data);
+          console.log('we got the duplicate!', data);
           res.send(data);
         })
         .catch((err) => console.log(err));
@@ -516,7 +516,7 @@ router.get("/reserve/duplicateCheck/:guest/:home", validateUser, (req, res) => {
   });
 });
 
-router.delete("/reserve", validateUser, (req, res) => {
+router.delete('/reserve', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -537,14 +537,14 @@ router.delete("/reserve", validateUser, (req, res) => {
                         trips.splice(uIndex, 1);
                         User.findByIdAndUpdate(
                           { _id: user[0]._id },
-                          { trips }
+                          { trips },
                         ).then(() => {
-                          console.log("user Updated!");
+                          console.log('user Updated!');
                         });
                       }
                     }
                   })
-                  .catch((err) => console.log("err on find guest", err));
+                  .catch((err) => console.log('err on find guest', err));
                 Home.find({ _id: reserve[0].homeId })
                   .then((home) => {
                     if (home.length) {
@@ -570,28 +570,28 @@ router.delete("/reserve", validateUser, (req, res) => {
                         }
                       });
                       const newReservedDays = reservedDays.filter((e) => e); // filtering all nulls
-                      console.log("NEW_RESERVED_DAYS: ", newReservedDays);
+                      console.log('NEW_RESERVED_DAYS: ', newReservedDays);
                       Home.findByIdAndUpdate(
                         { _id: reserve[0].homeId },
-                        { reservedDays: newReservedDays }
+                        { reservedDays: newReservedDays },
                       ).then(() => {
-                        console.log("home Updated too!");
+                        console.log('home Updated too!');
                       });
                     }
                   })
-                  .catch((err) => console.log("err on home update", err));
+                  .catch((err) => console.log('err on home update', err));
                 res.send(deleteRes); // sending the result to app
               }
             })
-            .catch((err) => res.send("err on reserve delete!", err));
+            .catch((err) => res.send('err on reserve delete!', err));
           //
         })
-        .catch((err) => console.log("find reserve item error", err));
+        .catch((err) => console.log('find reserve item error', err));
     }
   });
 });
 
-router.get("/explore", validateUser, (req, res) => {
+router.get('/explore', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -605,7 +605,7 @@ router.get("/explore", validateUser, (req, res) => {
   });
 });
 
-router.post("/explore", validateUser, (req, res) => {
+router.post('/explore', validateUser, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -617,7 +617,7 @@ router.post("/explore", validateUser, (req, res) => {
   });
 });
 
-router.put("/explore/:id", validateUser, (req, res, next) => {
+router.put('/explore/:id', validateUser, (req, res, next) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const ReviewSchema = new Schema({
@@ -11,5 +11,5 @@ const ReviewSchema = new Schema({
   comment: String,
 });
 
-const Review = mongoose.model("review", ReviewSchema);
+const Review = mongoose.model('review', ReviewSchema);
 export default Review;

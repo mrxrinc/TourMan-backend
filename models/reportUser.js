@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const ReportUserSchema = new Schema({
@@ -7,5 +7,5 @@ const ReportUserSchema = new Schema({
   reportType: Number,
 });
 
-const ReportUser = mongoose.model("reportUser", ReportUserSchema);
+const ReportUser = mongoose.model('reportUser', ReportUserSchema);
 export default ReportUser;

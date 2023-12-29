@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const HomeSchema = new Schema({
@@ -70,5 +70,5 @@ const HomeSchema = new Schema({
   popular: { type: Boolean, default: false },
 });
 
-const Home = mongoose.model("home", HomeSchema);
+const Home = mongoose.model('home', HomeSchema);
 export default Home;

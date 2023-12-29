@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const GeneralSchema = new Schema({
@@ -12,5 +12,5 @@ const GeneralSchema = new Schema({
   ],
 });
 
-const General = mongoose.model("general", GeneralSchema);
+const General = mongoose.model('general', GeneralSchema);
 export default General;

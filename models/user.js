@@ -1,22 +1,22 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
   firstName: {
     type: String,
-    required: [true, "FirstName is required"],
+    required: [true, 'FirstName is required'],
   },
   lastName: {
     type: String,
-    required: [true, "LastName is required"],
+    required: [true, 'LastName is required'],
   },
   email: {
     type: String,
-    required: [true, "Email is required"],
+    required: [true, 'Email is required'],
   },
   password: {
     type: String,
-    required: [true, "Password is required"],
+    required: [true, 'Password is required'],
   },
   birthday: {
     type: Array,
@@ -26,7 +26,7 @@ const UserSchema = new Schema({
   },
   sex: {
     type: String,
-    default: "male",
+    default: 'male',
   },
   location: {
     type: String,
@@ -48,7 +48,7 @@ const UserSchema = new Schema({
   },
   languages: {
     type: Array,
-    default: ["FA"],
+    default: ['FA'],
   },
   verifiedInfo: {
     type: String,
@@ -77,5 +77,5 @@ const UserSchema = new Schema({
   ],
 });
 
-const User = mongoose.model("user", UserSchema);
+const User = mongoose.model('user', UserSchema);
 export default User;
