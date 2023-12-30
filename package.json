@@ -7,18 +7,22 @@
   "scripts": {
     "start": "nodemon node server.js",
     "lint": "eslint .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "precommit": "eslint ."
   },
   "author": "Mohammad Mirzaei",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.18.2",
     "dotenv": "^16.3.1",
     "express": "^4.18.1",
     "jalaali-js": "^1.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "pino": "^8.17.2",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "eslint": "^8.56.0",
@@ -27,7 +31,9 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.1.2",
+    "husky": "^8.0.3",
     "nodemon": "^3.0.2",
+    "pino-pretty": "^10.3.1",
     "prettier": "^3.1.1"
   }
 }

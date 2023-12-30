@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
@@ -26,6 +27,7 @@ const UserSchema = new Schema({
   },
   sex: {
     type: String,
+    enum: ['male', 'female'],
     default: 'male',
   },
   location: {

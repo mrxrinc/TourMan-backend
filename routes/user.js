@@ -7,6 +7,7 @@ import multer from 'multer';
 import { SECRET_KEY, URL } from '../config/environments.js';
 import { User, Review } from '../models/index.js';
 import calculateReviews from '../utils/calculateReviews.js';
+import logger from '../utils/logger.js';
 import persianDate from '../utils/time.js';
 import validateUser from '../utils/validations.js';
 
@@ -92,7 +93,9 @@ router.post('/signin', (req, res) => {
         res.json({ userState: 'noUser' });
       }
     })
-    .catch(() => console.log('Mongo connection Error'));
+    .catch((err) => {
+      console.log('Mongo connection Error', err);
+    });
 });
 
 router.put('/update/:id', validateUser, (req, res, next) => {
