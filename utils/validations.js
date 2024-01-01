@@ -9,3 +9,10 @@ export default function validateUser(req, res, next) {
     res.sendStatus(403);
   }
 }
+
+export function inputValidationError(err) {
+  if (err?.error.name !== 'ZodError') return false;
+  const { issues } = err.error;
+  const errorMessages = issues.map((issue) => issue.message);
+  return errorMessages;
+}

@@ -10,8 +10,8 @@ router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 router.use('/', apiRoutes);
 
-router.use((err, req, res, next) => {
-  res.status(422).send({ error: err._message });
-});
+// router.use((err, req, res, next) => {
+//   res.status(422).send({ error: err._message });
+// });
 
 export default router;

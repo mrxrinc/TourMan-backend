@@ -1,42 +1,53 @@
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import z from 'zod';
 
 import { SECRET_KEY } from '../config/environments.js';
 import { User } from '../models/index.js';
-import logger from '../utils/logger.js';
+import Error from '../services/error.js';
+import Log from '../utils/logger.js';
 import persianDate from '../utils/time.js';
+import { inputValidationError } from '../utils/validations.js';
 
 const signinSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .email()
-    .transform((val) => val.trim().toLowerCase()),
-  password: z
-    .string()
-    .min(1)
-    .transform((val) => val.trim()),
+  email: z.string().trim().email().toLowerCase(),
+  password: z.string().min(1).trim(),
 });
 
-export const signin = (req, res) => {
+export const signin = async (req, res, next) => {
   const result = signinSchema.safeParse(req.body);
-  if (!result.success) {
-    res.status(400).json({ error: 'Invalid data' });
-    return;
-  }
-
-  const { email, password } = result.data;
-  User.find({ email, password })
-    .then((user) => {
-      if (user.length) {
-        res.json(user[0]);
-      } else {
-        res.json({ userState: 'noUser' });
-      }
-    })
-    .catch((err) => {
-      console.log('Mongo connection Error', err);
+  const validationErrors = inputValidationError(result);
+  if (validationErrors) {
+    return Error({
+      error: { message: validationErrors },
+      status: 422,
+      req,
+      res,
     });
+  }
+  const { email, password } = result.data;
+  try {
+    const user = await User.find({ email });
+    if (!user) {
+      return Error({
+        error: { message: 'User not found' },
+        status: 404,
+        req,
+        res,
+      });
+    }
+    if (user.length) {
+      res.json(user[0]);
+    } else {
+      res.json({ userState: 'noUser' });
+    }
+
+    // .catch((err) => {
+    //   console.log('Mongo connection Error', err);
+    // });
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const signup = (req, res, next) => {

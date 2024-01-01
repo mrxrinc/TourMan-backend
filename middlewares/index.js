@@ -1,6 +1,8 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 
+import errorHandler from '../services/error.js';
+
 import { errorResponder, errorLogger, invalidPathHandler } from './errors.js';
 import requestLogger from './logger.js';
 
@@ -11,5 +13,6 @@ export default function applyMiddlewares(app) {
   app.use(requestLogger);
   app.use(errorLogger);
   app.use(errorResponder);
+  // app.use(errorHandler);
   //   app.use(invalidPathHandler);
 }
