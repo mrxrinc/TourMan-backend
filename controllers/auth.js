@@ -1,34 +1,18 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import z from 'zod';
 
-import { SECRET_KEY } from '../config/environments.js';
+import { SECRET_KEY, URL } from '../config/environments.js';
 import { User } from '../models/index.js';
 import Error from '../services/error.js';
-import Log from '../utils/logger.js';
 import persianDate from '../utils/time.js';
-import { inputValidationError, VALIDATION } from '../utils/validations.js';
-
-const signinSchema = z.object({
-  email: z.string().trim().email().toLowerCase(),
-  password: z.string().min(1).trim(),
-});
+import { checkInputs, VALIDATION } from '../utils/validations.js';
+import { signinSchema, signupSchema } from '../utils/zodSchemas.js';
 
 export const signin = async (req, res, next) => {
   try {
-    const result = signinSchema.safeParse(req.body);
-    const validationErrors = inputValidationError(result);
-    if (validationErrors) {
-      next(
-        new Error(validationErrors, {
-          status: VALIDATION.status,
-          type: VALIDATION.type,
-        }),
-      );
-      return;
-    }
-
-    const { email, password } = result.data;
+    const safeData = checkInputs(signinSchema, req.body, next);
+    if (!safeData) return;
+    const { email, password } = safeData.data;
     const user = await User.find({ email });
     if (user.length === 0) {
       throw new Error('User not found', {
@@ -43,41 +27,48 @@ export const signin = async (req, res, next) => {
         type: VALIDATION.type,
       });
     }
-    const token = jwt.sign({ user }, SECRET_KEY);
+    const tokenData = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+    };
+    const token = jwt.sign({ tokenData }, SECRET_KEY);
     res.json({ token });
   } catch (error) {
     next(error);
   }
 };
 
-export const signup = (req, res, next) => {
-  const tokenData = {
-    firstName: req.body.firstName.trim(),
-    lastName: req.body.lastName.trim(),
-    email: req.body.email.trim().toLowerCase(),
-  };
-  const token = jwt.sign({ tokenData }, SECRET_KEY);
-  req.body.token = token;
-  const safeInputData = {
-    ...req.body,
-    firstName: req.body.firstName.trim(),
-    lastName: req.body.lastName.trim(),
-    password: req.body.password.trim(),
-    email: req.body.email.trim().toLowerCase(),
-    avatar: `${URL}uploads/userAvatars/default_profile_photo.png`,
-    registerDate: persianDate,
-  };
-  User.find({ email: safeInputData.email })
-    .then((result) => {
-      if (result.length) {
-        res.json({ userState: 'duplicate' });
-      } else {
-        console.log(safeInputData);
-        User.create(safeInputData).then((user) => {
-          console.log('================');
-          res.send(user);
-        });
-      }
-    })
-    .catch((err) => console.log(err));
+export const signup = async (req, res, next) => {
+  try {
+    const safeData = checkInputs(signupSchema, req.body, next);
+    if (!safeData) return;
+    const { firstName, lastName, email, password } = safeData.data;
+    const avatar = `${URL}uploads/userAvatars/default_profile_photo.png`;
+    // eslint-disable-next-line no-sync
+    const salt = bcrypt.genSaltSync(10);
+    const hash = await bcrypt.hash(password, salt);
+    const inputData = {
+      ...req.body,
+      firstName,
+      lastName,
+      password: hash,
+      email,
+      avatar,
+      registerDate: persianDate,
+    };
+    const user = await User.find({ email });
+    if (user.length) {
+      throw new Error('User already exists', {
+        status: VALIDATION.status,
+        type: VALIDATION.type,
+      });
+    }
+    const newUser = await User.create(inputData);
+    const tokenData = { firstName, lastName, email };
+    const token = jwt.sign({ tokenData }, SECRET_KEY);
+    res.json({ token, user: newUser });
+  } catch (error) {
+    next(error);
+  }
 };
