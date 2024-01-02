@@ -4,15 +4,18 @@ import express from 'express';
 import errorHandler from '../services/error.js';
 
 import { errorResponder, errorLogger, invalidPathHandler } from './errors.js';
-import requestLogger from './logger.js';
+import requestLogger from './requestLogger.js';
 
-export default function applyMiddlewares(app) {
+export function applyPriorMiddlewares(app) {
   app.use('/uploads', express.static('uploads')); // access permission
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(requestLogger);
+}
+
+export function applyErrorHandlingMiddlewares(app) {
   app.use(errorLogger);
   app.use(errorResponder);
   // app.use(errorHandler);
-  //   app.use(invalidPathHandler);
+  // app.use(invalidPathHandler);
 }

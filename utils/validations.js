@@ -1,3 +1,8 @@
+export const VALIDATION = {
+  type: 'validation',
+  status: 422,
+};
+
 export default function validateUser(req, res, next) {
   const bearerHeader = req.headers.authorization;
   if (typeof bearerHeader !== 'undefined') {
@@ -11,8 +16,7 @@ export default function validateUser(req, res, next) {
 }
 
 export function inputValidationError(err) {
-  if (err?.error.name !== 'ZodError') return false;
+  if (err?.error?.name !== 'ZodError') return null;
   const { issues } = err.error;
-  const errorMessages = issues.map((issue) => issue.message);
-  return errorMessages;
+  return issues.map((issue) => issue.message);
 }

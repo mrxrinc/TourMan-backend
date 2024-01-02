@@ -7,7 +7,7 @@ import { User } from '../models/index.js';
 import Error from '../services/error.js';
 import Log from '../utils/logger.js';
 import persianDate from '../utils/time.js';
-import { inputValidationError } from '../utils/validations.js';
+import { inputValidationError, VALIDATION } from '../utils/validations.js';
 
 const signinSchema = z.object({
   email: z.string().trim().email().toLowerCase(),
@@ -15,38 +15,38 @@ const signinSchema = z.object({
 });
 
 export const signin = async (req, res, next) => {
-  const result = signinSchema.safeParse(req.body);
-  const validationErrors = inputValidationError(result);
-  if (validationErrors) {
-    return Error({
-      error: { message: validationErrors },
-      status: 422,
-      req,
-      res,
-    });
-  }
-  const { email, password } = result.data;
   try {
-    const user = await User.find({ email });
-    if (!user) {
-      return Error({
-        error: { message: 'User not found' },
-        status: 404,
-        req,
-        res,
-      });
-    }
-    if (user.length) {
-      res.json(user[0]);
-    } else {
-      res.json({ userState: 'noUser' });
+    const result = signinSchema.safeParse(req.body);
+    const validationErrors = inputValidationError(result);
+    if (validationErrors) {
+      next(
+        new Error(validationErrors, {
+          status: VALIDATION.status,
+          type: VALIDATION.type,
+        }),
+      );
+      return;
     }
 
-    // .catch((err) => {
-    //   console.log('Mongo connection Error', err);
-    // });
-  } catch (err) {
-    next(err);
+    const { email, password } = result.data;
+    const user = await User.find({ email });
+    if (user.length === 0) {
+      throw new Error('User not found', {
+        status: VALIDATION.status,
+        type: VALIDATION.type,
+      });
+    }
+    const isMatch = await bcrypt.compare(password, user[0].password);
+    if (!isMatch) {
+      throw new Error('Incorrect password', {
+        status: VALIDATION.status,
+        type: VALIDATION.type,
+      });
+    }
+    const token = jwt.sign({ user }, SECRET_KEY);
+    res.json({ token });
+  } catch (error) {
+    next(error);
   }
 };
 
