@@ -1,8 +1,6 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 
-import errorHandler from '../services/error.js';
-
 import { errorResponder, errorLogger, invalidPathHandler } from './errors.js';
 import requestLogger from './requestLogger.js';
 
@@ -16,6 +14,5 @@ export function applyPriorMiddlewares(app) {
 export function applyErrorHandlingMiddlewares(app) {
   app.use(errorLogger);
   app.use(errorResponder);
-  // app.use(errorHandler);
-  // app.use(invalidPathHandler);
+  app.use(invalidPathHandler);
 }

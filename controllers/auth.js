@@ -1,7 +1,8 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-import { SECRET_KEY, URL } from '../config/environments.js';
+import { DEFAULT_AVATAR } from '../config/constants.js';
+import { SECRET_KEY } from '../config/environments.js';
 import { User } from '../models/index.js';
 import Error from '../services/error.js';
 import persianDate from '../utils/time.js';
@@ -44,7 +45,7 @@ export const signup = async (req, res, next) => {
     const safeData = checkInputs(signupSchema, req.body, next);
     if (!safeData) return;
     const { firstName, lastName, email, password } = safeData.data;
-    const avatar = `${URL}uploads/userAvatars/default_profile_photo.png`;
+    const avatar = DEFAULT_AVATAR;
     // eslint-disable-next-line no-sync
     const salt = bcrypt.genSaltSync(10);
     const hash = await bcrypt.hash(password, salt);

@@ -50,54 +50,6 @@ router.get('/:id', validateUser, (req, res) => {
   });
 });
 
-router.post('/signup', (req, res, next) => {
-  const tokenData = {
-    firstName: req.body.firstName.trim(),
-    lastName: req.body.lastName.trim(),
-    email: req.body.email.trim().toLowerCase(),
-  };
-  const token = jwt.sign({ tokenData }, SECRET_KEY);
-  req.body.token = token;
-  const safeInputData = {
-    ...req.body,
-    firstName: req.body.firstName.trim(),
-    lastName: req.body.lastName.trim(),
-    password: req.body.password.trim(),
-    email: req.body.email.trim().toLowerCase(),
-    avatar: `${URL}uploads/userAvatars/default_profile_photo.png`,
-    registerDate: persianDate,
-  };
-  User.find({ email: safeInputData.email })
-    .then((result) => {
-      if (result.length) {
-        res.json({ userState: 'duplicate' });
-      } else {
-        console.log(safeInputData);
-        User.create(safeInputData).then((user) => {
-          console.log('================');
-          res.send(user);
-        });
-      }
-    })
-    .catch((err) => console.log(err));
-});
-
-router.post('/signin', (req, res) => {
-  const email = req.body.email.trim().toLowerCase();
-  const password = req.body.password.trim();
-  User.find({ email, password })
-    .then((user) => {
-      if (user.length) {
-        res.json(user[0]);
-      } else {
-        res.json({ userState: 'noUser' });
-      }
-    })
-    .catch((err) => {
-      console.log('Mongo connection Error', err);
-    });
-});
-
 router.put('/update/:id', validateUser, (req, res, next) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
