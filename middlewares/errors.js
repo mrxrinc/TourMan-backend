@@ -15,9 +15,10 @@ export const errorResponder = (error, _request, response, next) => {
   console.log('========== ERROR RESPONDER ==========');
   response.header('Content-Type', 'application/json');
 
-  const status = error.status;
-  const type = error.type;
-  const data = type === VALIDATION ? error.message.split(',') : error.message;
+  const status = error?.status || 500;
+  const type = error?.type;
+  const data =
+    type === VALIDATION.type ? error.message.split(',') : error.message;
   response.status(status).send(data);
 };
 

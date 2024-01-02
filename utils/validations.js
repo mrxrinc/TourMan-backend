@@ -1,3 +1,5 @@
+import Error from '../services/error.js';
+
 export const VALIDATION = {
   type: 'validation',
   status: 422,
