@@ -5,15 +5,14 @@ import jwt from 'jsonwebtoken';
 import multer from 'multer';
 
 import { SECRET_KEY, URL } from '../config/environments.js';
+import isLoggedIn from '../middlewares/authValidate.js';
 import { User, Review } from '../models/index.js';
 import calculateReviews from '../utils/calculateReviews.js';
-import logger from '../utils/logger.js';
 import persianDate from '../utils/time.js';
-import validateUser from '../utils/validations.js';
 
 const router = express.Router();
 
-router.get('/:id', validateUser, (req, res) => {
+router.get('/:id', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       console.log(err);
@@ -50,7 +49,7 @@ router.get('/:id', validateUser, (req, res) => {
   });
 });
 
-router.put('/update/:id', validateUser, (req, res, next) => {
+router.put('/update/:id', isLoggedIn, (req, res, next) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -66,7 +65,7 @@ router.put('/update/:id', validateUser, (req, res, next) => {
   });
 });
 
-router.put('/message/:id', validateUser, (req, res, next) => {
+router.put('/message/:id', isLoggedIn, (req, res, next) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -115,7 +114,7 @@ const userAvatarUpload = multer({
   fileFilter: userFileFilter,
 }).single('userAvatar');
 
-router.post('/avatar', validateUser, (req, res, next) => {
+router.post('/avatar', isLoggedIn, (req, res, next) => {
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
   userAvatarUpload(req, res, (err) => {

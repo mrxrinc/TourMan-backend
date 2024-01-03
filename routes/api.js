@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import multer from 'multer';
 
 import { SECRET_KEY, URL } from '../config/environments.js';
+import isLoggedIn from '../middlewares/authValidate.js';
 import {
   User,
   Privacy,
@@ -19,7 +20,6 @@ import {
 } from '../models/index.js';
 import calculateReviews from '../utils/calculateReviews.js';
 import persianDate from '../utils/time.js';
-import validateUser from '../utils/validations.js';
 const router = express.Router();
 
 router.get('/privacy', (req, res) => {
@@ -28,7 +28,7 @@ router.get('/privacy', (req, res) => {
   });
 });
 
-router.post('/privacy', validateUser, (req, res) => {
+router.post('/privacy', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -42,7 +42,7 @@ router.post('/privacy', validateUser, (req, res) => {
   });
 });
 
-router.get('/help', validateUser, (req, res) => {
+router.get('/help', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -54,7 +54,7 @@ router.get('/help', validateUser, (req, res) => {
   });
 });
 
-router.post('/feedback', validateUser, (req, res) => {
+router.post('/feedback', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -77,7 +77,7 @@ router.post('/feedback', validateUser, (req, res) => {
   });
 });
 
-router.post('/reportUser', validateUser, (req, res) => {
+router.post('/reportUser', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -91,7 +91,7 @@ router.post('/reportUser', validateUser, (req, res) => {
   });
 });
 
-router.get('/homes', validateUser, (req, res) => {
+router.get('/homes', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -279,7 +279,7 @@ router.get('/homes', validateUser, (req, res) => {
   });
 });
 
-router.post('/homes', validateUser, (req, res) => {
+router.post('/homes', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -293,7 +293,7 @@ router.post('/homes', validateUser, (req, res) => {
   });
 });
 
-router.put('/homes/:id', validateUser, (req, res) => {
+router.put('/homes/:id', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -309,7 +309,7 @@ router.put('/homes/:id', validateUser, (req, res) => {
   });
 });
 
-router.delete('/homes', validateUser, (req, res) => {
+router.delete('/homes', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -324,7 +324,7 @@ router.delete('/homes', validateUser, (req, res) => {
   });
 });
 
-router.get('/homes/:id', validateUser, (req, res) => {
+router.get('/homes/:id', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -360,7 +360,7 @@ router.get('/homes/:id', validateUser, (req, res) => {
   });
 });
 
-router.get('/homes/getInArray/:array', validateUser, (req, res) => {
+router.get('/homes/getInArray/:array', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -377,7 +377,7 @@ router.get('/homes/getInArray/:array', validateUser, (req, res) => {
   });
 });
 
-router.post('/reviews', validateUser, (req, res) => {
+router.post('/reviews', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -395,7 +395,7 @@ router.post('/reviews', validateUser, (req, res) => {
   });
 });
 
-router.get('/reviews/:id', validateUser, (req, res) => {
+router.get('/reviews/:id', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -432,7 +432,7 @@ const homeAvatarUpload = multer({
   fileFilter: homeFileFilter,
 }).single('homeImage');
 
-router.post('/homes/image', validateUser, (req, res, next) => {
+router.post('/homes/image', isLoggedIn, (req, res, next) => {
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
   homeAvatarUpload(req, res, (err) => {
@@ -445,7 +445,7 @@ router.post('/homes/image', validateUser, (req, res, next) => {
   });
 });
 
-router.post('/reserve', validateUser, (req, res) => {
+router.post('/reserve', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -489,7 +489,7 @@ router.post('/reserve', validateUser, (req, res) => {
   });
 });
 
-router.get('/reserve/:host', validateUser, (req, res) => {
+router.get('/reserve/:host', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -504,7 +504,7 @@ router.get('/reserve/:host', validateUser, (req, res) => {
   });
 });
 
-router.get('/reserve/duplicateCheck/:guest/:home', validateUser, (req, res) => {
+router.get('/reserve/duplicateCheck/:guest/:home', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -519,7 +519,7 @@ router.get('/reserve/duplicateCheck/:guest/:home', validateUser, (req, res) => {
   });
 });
 
-router.delete('/reserve', validateUser, (req, res) => {
+router.delete('/reserve', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -594,7 +594,7 @@ router.delete('/reserve', validateUser, (req, res) => {
   });
 });
 
-router.get('/explore', validateUser, (req, res) => {
+router.get('/explore', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -608,7 +608,7 @@ router.get('/explore', validateUser, (req, res) => {
   });
 });
 
-router.post('/explore', validateUser, (req, res) => {
+router.post('/explore', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
@@ -620,7 +620,7 @@ router.post('/explore', validateUser, (req, res) => {
   });
 });
 
-router.put('/explore/:id', validateUser, (req, res, next) => {
+router.put('/explore/:id', isLoggedIn, (req, res, next) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
       res.sendStatus(403);
