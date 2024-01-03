@@ -58,9 +58,6 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  token: {
-    type: String,
-  },
   registerDate: {
     type: String,
   },

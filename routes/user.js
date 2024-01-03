@@ -1,95 +1,71 @@
 import path from 'path';
 
 import express from 'express';
-import jwt from 'jsonwebtoken';
 import multer from 'multer';
 
-import { SECRET_KEY, URL } from '../config/environments.js';
-import isLoggedIn from '../middlewares/authValidate.js';
+import { URL } from '../config/environments.js';
+import isLoggedIn from '../middlewares/isLoggedIn.js';
 import { User, Review } from '../models/index.js';
-import calculateReviews from '../utils/calculateReviews.js';
+import getUserReviewsData from '../utils/getReviewsData.js';
 import persianDate from '../utils/time.js';
+import { checkInputs } from '../utils/validations.js';
+import { userSchema } from '../utils/zodSchemas.js';
 
 const router = express.Router();
 
-router.get('/:id', isLoggedIn, (req, res) => {
-  jwt.verify(req.token, SECRET_KEY, (err, data) => {
-    if (err) {
-      console.log(err);
-      res.sendStatus(403);
-    } else {
-      // every time getting a user, it needs to calculate the reviews information
-      Review.find({ parent: req.params.id }).then((reviews) => {
-        if (reviews.length) {
-          // if user has Reviews
-          const userNewData = calculateReviews(reviews);
-          User.findByIdAndUpdate({ _id: req.params.id }, userNewData).then(
-            () => {
-              User.findOne({ _id: req.params.id }).then((data) => {
-                res.send(data);
-              });
-            },
-          );
-        } else {
-          // if user has'nt any Reviews
-          const resetReviewInfo = {
-            reviewsCount: 0,
-            overallRate: 0,
-          };
-          User.findByIdAndUpdate({ _id: req.params.id }, resetReviewInfo).then(
-            () => {
-              User.findOne({ _id: req.params.id }).then((data) => {
-                res.send(data);
-              });
-            },
-          );
-        }
-      });
-    }
-  });
+router.get('/:id', isLoggedIn, async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    // every time getting a user, it needs to calculate the reviews information
+    const reviews = await Review.find({ parent: userId });
+    const userReviewsData = getUserReviewsData(reviews);
+    const user = await User.findByIdAndUpdate(
+      { _id: userId },
+      userReviewsData,
+      { new: true },
+    );
+    res.send(user);
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.put('/update/:id', isLoggedIn, (req, res, next) => {
-  jwt.verify(req.token, SECRET_KEY, (err, data) => {
-    if (err) {
-      res.sendStatus(403);
-    } else {
-      User.findByIdAndUpdate({ _id: req.params.id }, req.body)
-        .then(() => {
-          User.findOne({ _id: req.params.id }).then((user) => {
-            res.send(user);
-          });
-        })
-        .catch((err) => console.log(err));
-    }
-  });
+router.put('/:id', isLoggedIn, async (req, res, next) => {
+  try {
+    const safeData = checkInputs(userSchema, req.body, next);
+    if (!safeData) return;
+    const userId = req.params.id;
+    const user = await User.findByIdAndUpdate({ _id: userId }, safeData.data, {
+      new: true,
+    });
+    res.send(user);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.put('/message/:id', isLoggedIn, (req, res, next) => {
-  jwt.verify(req.token, SECRET_KEY, (err, data) => {
-    if (err) {
-      res.sendStatus(403);
-    } else {
-      const data = {
-        ...req.body,
-        date: persianDate,
-      };
-      User.findOne({ _id: req.params.id })
-        .then((user) => {
-          const msgs = user.messages;
-          msgs.push(data);
-          User.findByIdAndUpdate(
-            { _id: req.params.id },
-            { messages: msgs },
-          ).then(() => {
+  try {
+    const data = {
+      ...req.body,
+      date: persianDate,
+    };
+    User.findOne({ _id: req.params.id })
+      .then((user) => {
+        const msgs = user.messages;
+        msgs.push(data);
+        User.findByIdAndUpdate({ _id: req.params.id }, { messages: msgs }).then(
+          () => {
             User.findOne({ _id: req.params.id }).then((user) => {
               res.send(user.messages);
             });
-          });
-        })
-        .catch((err) => console.log(err));
-    }
-  });
+          },
+        );
+      })
+      .catch((err) => console.log(err));
+  } catch (error) {
+    next(error);
+  }
 });
 
 const userStorage = multer.diskStorage({

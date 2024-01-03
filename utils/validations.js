@@ -1,4 +1,5 @@
 import Error from '../services/error.js';
+import Log from '../utils/logger.js';
 
 export const VALIDATION = {
   type: 'validation',
@@ -7,8 +8,9 @@ export const VALIDATION = {
 
 export function inputValidationErrors(err) {
   if (err?.error?.name !== 'ZodError') return null;
+  Log.error(err);
   const { issues } = err.error;
-  return issues.map((issue) => issue.message);
+  return issues.map((issue) => [issue.path[0], issue.message]);
 }
 
 export function checkInputs(schema, data, next) {

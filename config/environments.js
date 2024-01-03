@@ -7,3 +7,4 @@ export const API_PATH = process.env.API_PATH;
 export const URL = `${BASE_URL}:${PORT}${API_PATH}`;
 export const MONGO_URI = process.env.MONGO_URI;
 export const SECRET_KEY = process.env.JWT_SECRET;
+export const JWT_EXPIRE = process.env.JWT_EXPIRE;

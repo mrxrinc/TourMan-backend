@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 import multer from 'multer';
 
 import { SECRET_KEY, URL } from '../config/environments.js';
-import isLoggedIn from '../middlewares/authValidate.js';
+import isLoggedIn from '../middlewares/isLoggedIn.js';
 import {
   User,
   Privacy,
@@ -18,7 +18,7 @@ import {
   Reserve,
   General,
 } from '../models/index.js';
-import calculateReviews from '../utils/calculateReviews.js';
+import getUserReviewsData from '../utils/getReviewsData.js';
 import persianDate from '../utils/time.js';
 const router = express.Router();
 
@@ -333,7 +333,7 @@ router.get('/homes/:id', isLoggedIn, (req, res) => {
       Review.find({ parent: req.params.id }).then((reviews) => {
         if (reviews.length) {
           // if home has Reviews
-          const homeNewData = calculateReviews(reviews);
+          const homeNewData = getUserReviewsData(reviews);
           Home.findByIdAndUpdate({ _id: req.params.id }, homeNewData).then(
             () => {
               Home.findOne({ _id: req.params.id }).then((data) => {

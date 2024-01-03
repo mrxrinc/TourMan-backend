@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import { DEFAULT_AVATAR } from '../config/constants.js';
-import { SECRET_KEY } from '../config/environments.js';
+import { JWT_EXPIRE, SECRET_KEY } from '../config/environments.js';
 import { User } from '../models/index.js';
 import Error from '../services/error.js';
 import persianDate from '../utils/time.js';
@@ -33,7 +33,9 @@ export const signin = async (req, res, next) => {
       lastName: user.lastName,
       email: user.email,
     };
-    const token = jwt.sign({ tokenData }, SECRET_KEY);
+    const token = jwt.sign({ tokenData }, SECRET_KEY, {
+      expiresIn: JWT_EXPIRE,
+    });
     res.json({ token });
   } catch (error) {
     next(error);
@@ -67,7 +69,9 @@ export const signup = async (req, res, next) => {
     }
     const newUser = await User.create(inputData);
     const tokenData = { firstName, lastName, email };
-    const token = jwt.sign({ tokenData }, SECRET_KEY);
+    const token = jwt.sign({ tokenData }, SECRET_KEY, {
+      expiresIn: JWT_EXPIRE,
+    });
     res.json({ token, user: newUser });
   } catch (error) {
     next(error);
