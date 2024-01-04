@@ -12,6 +12,17 @@ export const signinSchema = z.object({
   password: z.string().min(4).trim(),
 });
 
+export const messageSchema = z
+  .object({
+    title: z.string(),
+    text: z.string(),
+    date: z.string(),
+    archive: z.boolean(),
+  })
+  .optional();
+
+const messagesSchema = z.array(messageSchema);
+
 export const userSchema = z.object({
   firstName: z.string().min(1).trim().optional(),
   lastName: z.string().min(1).trim().optional(),
@@ -32,14 +43,5 @@ export const userSchema = z.object({
   overallRate: z.number().optional(),
   likes: z.array(z.string()),
   trips: z.array(z.string()),
-  messages: z
-    .array(
-      z.object({
-        title: z.string(),
-        text: z.string(),
-        date: z.string(),
-        archive: z.boolean(),
-      }),
-    )
-    .optional(),
+  messages: messagesSchema,
 });
