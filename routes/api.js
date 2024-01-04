@@ -22,26 +22,6 @@ import getUserReviewsData from '../utils/getReviewsData.js';
 import persianDate from '../utils/time.js';
 const router = express.Router();
 
-router.get('/privacy', (req, res) => {
-  Privacy.find({}).then((data) => {
-    res.send(data);
-  });
-});
-
-router.post('/privacy', isLoggedIn, (req, res) => {
-  jwt.verify(req.token, SECRET_KEY, (err, data) => {
-    if (err) {
-      res.sendStatus(403);
-    } else {
-      Privacy.create(req.body)
-        .then((data) => {
-          res.send(data);
-        })
-        .catch(() => console.log('Error in creating Privacy item'));
-    }
-  });
-});
-
 router.get('/help', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {

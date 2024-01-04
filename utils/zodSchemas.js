@@ -45,3 +45,9 @@ export const userSchema = z.object({
   trips: z.array(z.string()),
   messages: messagesSchema,
 });
+
+export const privacySchema = z
+  .object({
+    text: z.string().min(1).trim(),
+  })
+  .optional();
