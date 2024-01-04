@@ -28,6 +28,6 @@ const handleAvatarUpload = multer({
   storage: userStorage,
   fileFilter: userFileFilter,
   limits: { fileSize: 1024 * 1024 * 6 },
-}).single('userAvatar');
+});
 
 export default handleAvatarUpload;

@@ -1,3 +1,4 @@
+import { BASE_URL, PORT } from '../config/environments.js';
 import { Review, User } from '../models/index.js';
 import getUserReviewsData from '../utils/getReviewsData.js';
 import persianDate from '../utils/time.js';
@@ -35,7 +36,7 @@ export const updateUser = async (req, res, next) => {
   }
 };
 
-export const getUserMessages = async (req, res, next) => {
+export const addMessage = async (req, res, next) => {
   try {
     const safeData = checkInputs(messageSchema, req.body, next);
     if (!safeData) return;
@@ -53,6 +54,20 @@ export const getUserMessages = async (req, res, next) => {
       { new: true },
     );
     res.send(updatedUser.messages);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const avatarUpload = async (req, res, next) => {
+  try {
+    const userId = req.body?.id;
+    const avatarPath = `${BASE_URL}:${PORT}/${req.file.path}`;
+    await User.findByIdAndUpdate(
+      { _id: userId },
+      { avatar: avatarPath, thumb: avatarPath },
+    );
+    res.send(avatarPath);
   } catch (error) {
     next(error);
   }

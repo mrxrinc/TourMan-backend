@@ -1,11 +1,12 @@
 import express from 'express';
 
-import avatarUpload from '../controllers/upload.js';
 import {
   getUserById,
   updateUser,
-  getUserMessages,
+  addMessage,
+  avatarUpload,
 } from '../controllers/user.js';
+import handleAvatarUpload from '../services/upload.js';
 
 const router = express.Router();
 
@@ -13,8 +14,8 @@ router.get('/:id', getUserById);
 
 router.put('/:id', updateUser);
 
-router.put('/message/:id', getUserMessages);
+router.put('/message/:id', addMessage);
 
-router.post('/avatar', avatarUpload);
+router.post('/avatar', handleAvatarUpload.single('userAvatar'), avatarUpload);
 
 export default router;
