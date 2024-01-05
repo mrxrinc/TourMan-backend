@@ -73,3 +73,12 @@ export const exploreSchema = z.object({
   specialOffers: z.array(z.string()),
   promotedCities: z.array(promotedCitySchema),
 });
+
+export const reviewSchema = z.object({
+  userId: z.string(),
+  parent: z.string(),
+  comment: z.string(),
+  userFullName: z.string(),
+  avatar: z.string(),
+  rate: z.number(),
+});

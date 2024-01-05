@@ -9,7 +9,7 @@ import { SECRET_KEY, URL } from '../config/environments.js';
 import isLoggedIn from '../middlewares/isLoggedIn.js';
 import { User, Home, Review, Reserve } from '../models/index.js';
 import getUserReviewsData from '../utils/getReviewsData.js';
-import persianDate from '../utils/time.js';
+import persianDate from '../utils/date.js';
 const router = express.Router();
 
 router.get('/homes', isLoggedIn, (req, res) => {
@@ -289,39 +289,6 @@ router.get('/homes/getInArray/:array', isLoggedIn, (req, res) => {
       console.log(req.params.array);
       const array = req.params.array.split(',');
       Home.find({ _id: { $in: array } })
-        .sort({ _id: -1 })
-        .then((data) => {
-          res.send(data);
-        })
-        .catch((err) => console.log(err));
-    }
-  });
-});
-
-router.post('/reviews', isLoggedIn, (req, res) => {
-  jwt.verify(req.token, SECRET_KEY, (err, data) => {
-    if (err) {
-      res.sendStatus(403);
-    } else {
-      const data = {
-        ...req.body,
-        date: persianDate,
-      };
-      Review.create(data)
-        .then((result) => {
-          res.send(result);
-        })
-        .catch((err) => res.send(err));
-    }
-  });
-});
-
-router.get('/reviews/:id', isLoggedIn, (req, res) => {
-  jwt.verify(req.token, SECRET_KEY, (err, data) => {
-    if (err) {
-      res.sendStatus(403);
-    } else {
-      Review.find({ parent: req.params.id })
         .sort({ _id: -1 })
         .then((data) => {
           res.send(data);

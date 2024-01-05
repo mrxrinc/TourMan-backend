@@ -1,5 +1,5 @@
 import { Help, Feedback, User } from '../models/index.js';
-import persianDate from '../utils/time.js';
+import persianDate from '../utils/date.js';
 import { checkInputs } from '../utils/validations.js';
 import { feedbackSchema } from '../utils/zodSchemas.js';
 

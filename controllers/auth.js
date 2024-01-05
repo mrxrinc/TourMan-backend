@@ -5,7 +5,7 @@ import { DEFAULT_AVATAR } from '../config/constants.js';
 import { JWT_EXPIRE, SECRET_KEY } from '../config/environments.js';
 import { User } from '../models/index.js';
 import Error from '../services/error.js';
-import persianDate from '../utils/time.js';
+import persianDate from '../utils/date.js';
 import { checkInputs, VALIDATION } from '../utils/validations.js';
 import { signinSchema, signupSchema } from '../utils/zodSchemas.js';
 
