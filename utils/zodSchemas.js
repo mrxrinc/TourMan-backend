@@ -62,3 +62,14 @@ export const feedbackSchema = z.object({
   userId: z.string().min(1),
   text: z.string(),
 });
+
+const promotedCitySchema = z.object({
+  name: z.string(),
+  image: z.string(),
+  province: z.string(),
+});
+
+export const exploreSchema = z.object({
+  specialOffers: z.array(z.string()),
+  promotedCities: z.array(promotedCitySchema),
+});

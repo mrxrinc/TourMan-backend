@@ -21,41 +21,6 @@ import getUserReviewsData from '../utils/getReviewsData.js';
 import persianDate from '../utils/time.js';
 const router = express.Router();
 
-router.get('/help', isLoggedIn, (req, res) => {
-  jwt.verify(req.token, SECRET_KEY, (err, data) => {
-    if (err) {
-      res.sendStatus(403);
-    } else {
-      Help.find({}).then((data) => {
-        res.send(data);
-      });
-    }
-  });
-});
-
-router.post('/feedback', isLoggedIn, (req, res) => {
-  jwt.verify(req.token, SECRET_KEY, (err, data) => {
-    if (err) {
-      res.sendStatus(403);
-    } else {
-      User.findOne({ _id: req.body.userId }).then((user) => {
-        const data = {
-          name: `${user.firstName} ${user.lastName}`,
-          email: user.email,
-          mobile: user.mobile,
-          date: persianDate,
-          ...req.body,
-        };
-        Feedback.create(data)
-          .then((feedbackRes) => {
-            res.send(feedbackRes);
-          })
-          .catch((err) => console.log(err));
-      });
-    }
-  });
-});
-
 router.get('/homes', isLoggedIn, (req, res) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
     if (err) {
@@ -561,31 +526,31 @@ router.delete('/reserve', isLoggedIn, (req, res) => {
   });
 });
 
-router.get('/explore', isLoggedIn, (req, res) => {
-  jwt.verify(req.token, SECRET_KEY, (err, data) => {
-    if (err) {
-      res.sendStatus(403);
-    } else {
-      General.find({})
-        .then((data) => {
-          res.send(data);
-        })
-        .catch((err) => console.log(err));
-    }
-  });
-});
+// router.get('/explore', isLoggedIn, (req, res) => {
+//   jwt.verify(req.token, SECRET_KEY, (err, data) => {
+//     if (err) {
+//       res.sendStatus(403);
+//     } else {
+//       General.find({})
+//         .then((data) => {
+//           res.send(data);
+//         })
+//         .catch((err) => console.log(err));
+//     }
+//   });
+// });
 
-router.post('/explore', isLoggedIn, (req, res) => {
-  jwt.verify(req.token, SECRET_KEY, (err, data) => {
-    if (err) {
-      res.sendStatus(403);
-    } else {
-      General.create(req.body).then((data) => {
-        res.send(data);
-      });
-    }
-  });
-});
+// router.post('/explore', isLoggedIn, (req, res) => {
+//   jwt.verify(req.token, SECRET_KEY, (err, data) => {
+//     if (err) {
+//       res.sendStatus(403);
+//     } else {
+//       General.create(req.body).then((data) => {
+//         res.send(data);
+//       });
+//     }
+//   });
+// });
 
 router.put('/explore/:id', isLoggedIn, (req, res, next) => {
   jwt.verify(req.token, SECRET_KEY, (err, data) => {
