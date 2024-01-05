@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+
 import { SECRET_KEY } from '../config/environments.js';
 import Error from '../services/error.js';
 
