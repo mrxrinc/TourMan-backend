@@ -51,3 +51,9 @@ export const privacySchema = z
     text: z.string().min(1).trim(),
   })
   .optional();
+
+export const reportUserSchema = z.object({
+  userId: z.string().min(1),
+  hostId: z.string().min(1),
+  reportType: z.number().min(1),
+});

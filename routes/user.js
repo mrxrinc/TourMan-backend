@@ -5,6 +5,7 @@ import {
   updateUser,
   addMessage,
   avatarUpload,
+  report,
 } from '../controllers/user.js';
 import handleAvatarUpload from '../services/upload.js';
 
@@ -15,6 +16,8 @@ router.get('/:id', getUserById);
 router.put('/:id', updateUser);
 
 router.put('/message/:id', addMessage);
+
+router.post('/report', report);
 
 router.post('/avatar', handleAvatarUpload.single('userAvatar'), avatarUpload);
 

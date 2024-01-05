@@ -1,9 +1,13 @@
 import { BASE_URL, PORT } from '../config/environments.js';
-import { Review, User } from '../models/index.js';
+import { ReportUser, Review, User } from '../models/index.js';
 import getUserReviewsData from '../utils/getReviewsData.js';
 import persianDate from '../utils/time.js';
 import { checkInputs } from '../utils/validations.js';
-import { userSchema, messageSchema } from '../utils/zodSchemas.js';
+import {
+  userSchema,
+  messageSchema,
+  reportUserSchema,
+} from '../utils/zodSchemas.js';
 
 export const getUserById = async (req, res, next) => {
   try {
@@ -68,6 +72,18 @@ export const avatarUpload = async (req, res, next) => {
       { avatar: avatarPath, thumb: avatarPath },
     );
     res.send(avatarPath);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const report = async (req, res, next) => {
+  try {
+    const safeData = checkInputs(reportUserSchema, req.body, next);
+    if (!safeData) return;
+    console.log(safeData.data);
+    const reportUserResult = await ReportUser.create(safeData.data);
+    res.send(reportUserResult);
   } catch (error) {
     next(error);
   }

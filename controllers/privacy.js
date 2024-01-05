@@ -15,7 +15,7 @@ export const addPrivacy = async (req, res, next) => {
   try {
     const safeData = checkInputs(privacySchema, req.body, next);
     if (!safeData) return;
-    const privacies = await Privacy.create(req.body);
+    const privacies = await Privacy.create(safeData.data);
     res.send(privacies);
   } catch (error) {
     next(error);

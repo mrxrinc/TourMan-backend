@@ -9,7 +9,6 @@ import { SECRET_KEY, URL } from '../config/environments.js';
 import isLoggedIn from '../middlewares/isLoggedIn.js';
 import {
   User,
-  Privacy,
   Help,
   Feedback,
   ReportUser,
@@ -53,20 +52,6 @@ router.post('/feedback', isLoggedIn, (req, res) => {
           })
           .catch((err) => console.log(err));
       });
-    }
-  });
-});
-
-router.post('/reportUser', isLoggedIn, (req, res) => {
-  jwt.verify(req.token, SECRET_KEY, (err, data) => {
-    if (err) {
-      res.sendStatus(403);
-    } else {
-      ReportUser.create(req.body)
-        .then((result) => {
-          res.send(result);
-        })
-        .catch((err) => console.log(err));
     }
   });
 });
@@ -399,6 +384,7 @@ const homeStorage = multer.diskStorage({
     cb(null, Date.now() + randomString + path.extname(file.originalname));
   },
 });
+
 const homeFileFilter = (req, file, cb) => {
   if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
     cb(null, true);
@@ -406,6 +392,7 @@ const homeFileFilter = (req, file, cb) => {
     cb('ERROR : NOT Allowed FORMAT');
   }
 };
+
 const homeAvatarUpload = multer({
   storage: homeStorage,
   limits: { fileSize: 1024 * 1024 * 3 }, // means 3MB
