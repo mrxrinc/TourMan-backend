@@ -57,3 +57,8 @@ export const reportUserSchema = z.object({
   hostId: z.string().min(1),
   reportType: z.number().min(1),
 });
+
+export const feedbackSchema = z.object({
+  userId: z.string().min(1),
+  text: z.string(),
+});
