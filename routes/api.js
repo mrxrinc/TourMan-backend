@@ -7,16 +7,7 @@ import multer from 'multer';
 
 import { SECRET_KEY, URL } from '../config/environments.js';
 import isLoggedIn from '../middlewares/isLoggedIn.js';
-import {
-  User,
-  Help,
-  Feedback,
-  ReportUser,
-  Home,
-  Review,
-  Reserve,
-  General,
-} from '../models/index.js';
+import { User, Home, Review, Reserve } from '../models/index.js';
 import getUserReviewsData from '../utils/getReviewsData.js';
 import persianDate from '../utils/time.js';
 const router = express.Router();
@@ -522,48 +513,6 @@ router.delete('/reserve', isLoggedIn, (req, res) => {
           //
         })
         .catch((err) => console.log('find reserve item error', err));
-    }
-  });
-});
-
-// router.get('/explore', isLoggedIn, (req, res) => {
-//   jwt.verify(req.token, SECRET_KEY, (err, data) => {
-//     if (err) {
-//       res.sendStatus(403);
-//     } else {
-//       General.find({})
-//         .then((data) => {
-//           res.send(data);
-//         })
-//         .catch((err) => console.log(err));
-//     }
-//   });
-// });
-
-// router.post('/explore', isLoggedIn, (req, res) => {
-//   jwt.verify(req.token, SECRET_KEY, (err, data) => {
-//     if (err) {
-//       res.sendStatus(403);
-//     } else {
-//       General.create(req.body).then((data) => {
-//         res.send(data);
-//       });
-//     }
-//   });
-// });
-
-router.put('/explore/:id', isLoggedIn, (req, res, next) => {
-  jwt.verify(req.token, SECRET_KEY, (err, data) => {
-    if (err) {
-      res.sendStatus(403);
-    } else {
-      General.findByIdAndUpdate({ _id: req.params.id }, req.body)
-        .then(() => {
-          General.findOne({ _id: req.params.id }).then((data) => {
-            res.send(data);
-          });
-        })
-        .catch((err) => console.log(err));
     }
   });
 });
