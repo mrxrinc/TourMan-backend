@@ -82,3 +82,21 @@ export const reviewSchema = z.object({
   avatar: z.string(),
   rate: z.number(),
 });
+
+export const reserveSchema = z.object({
+  homeId: z.string(),
+  hostId: z.string(),
+  guestId: z.string(),
+  homeTitle: z.string(),
+  hostName: z.string(),
+  guestName: z.string(),
+  adults: z.number(),
+  children: z.number(),
+  pets: z.boolean(),
+  reservedDays: z.array(z.array(z.string())),
+  price: z.number(),
+  totalNights: z.number(),
+  totalPrice: z.number(),
+  reservedDate: z.string(),
+  message: z.string().optional(),
+});
