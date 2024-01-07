@@ -7,9 +7,9 @@ import {
   updateHome,
   deleteHome,
   addHome,
-  uploadHomeImage,
+  uploadImage,
 } from '../controllers/home.js';
-import { handleUploadHomeImage } from '../services/upload.js';
+import { handleHomeImageUpload } from '../services/upload.js';
 
 const router = express.Router();
 
@@ -17,13 +17,8 @@ router.get('/all', getHomes);
 router.get('/:id', getHome);
 router.get('/array/:array', getInArray);
 router.post('/', addHome);
-router.post(
-  '/image',
-  handleUploadHomeImage.single('homeImage'),
-  uploadHomeImage,
-);
 router.put('/', updateHome);
 router.delete('/', deleteHome);
-router.post('/', deleteHome);
+router.post('/image', handleHomeImageUpload.single('homeImage'), uploadImage);
 
 export default router;

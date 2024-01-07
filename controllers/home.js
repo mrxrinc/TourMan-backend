@@ -65,10 +65,12 @@ export const deleteHome = async (req, res, next) => {
   }
 };
 
-export const uploadHomeImage = async (req, res, next) => {
+export const uploadImage = async (req, res, next) => {
   try {
-    const imagePath = URL + req.file.path.replace(/\\/g, '/');
-    res.send(imagePath);
+    const homeId = req.body.id;
+    const image = req.file.path;
+    await Home.findByIdAndUpdate({ _id: homeId }, { image });
+    res.send(image);
   } catch (error) {
     next(error);
   }

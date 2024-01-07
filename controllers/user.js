@@ -65,13 +65,10 @@ export const addMessage = async (req, res, next) => {
 
 export const avatarUpload = async (req, res, next) => {
   try {
-    const userId = req.body?.id;
-    const avatarPath = `${BASE_URL}:${PORT}/${req.file.path}`;
-    await User.findByIdAndUpdate(
-      { _id: userId },
-      { avatar: avatarPath, thumb: avatarPath },
-    );
-    res.send(avatarPath);
+    const userId = req.body.id;
+    const avatar = req.file.path;
+    await User.findByIdAndUpdate({ _id: userId }, { avatar, thumb: avatar });
+    res.send(avatar);
   } catch (error) {
     next(error);
   }

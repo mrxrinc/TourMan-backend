@@ -32,11 +32,11 @@ const fileFilter = (req, file, cb) => {
 export const handleAvatarUpload = multer({
   limits,
   fileFilter,
-  storage: getStorage(`../${AVATARS_DIR}`),
+  storage: getStorage(AVATARS_DIR),
 });
 
-export const handleUploadHomeImage = multer({
+export const handleHomeImageUpload = multer({
   limits,
   fileFilter,
-  storage: getStorage(`../${HOME_IMAGES_DIR}`),
+  storage: getStorage(HOME_IMAGES_DIR),
 });
