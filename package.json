@@ -1,19 +1,39 @@
 {
   "name": "tourman_backend",
   "version": "1.0.0",
-  "description": "Backend area of TourMan App",
-  "main": "index.js",
+  "description": "Backend service for TourMan App",
+  "type": "module",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon node server.js",
+    "lint": "eslint .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "precommit": "eslint ."
   },
-  "author": "Mohammad Mirzaei (mrxrinc)",
+  "author": "Mohammad Mirzaei",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.18.2",
-    "express": "^4.16.3",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.1",
     "jalaali-js": "^1.1.0",
-    "jsonwebtoken": "^8.2.1",
-    "mongoose": "^5.1.0",
-    "multer": "^1.3.0"
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.3",
+    "multer": "^1.4.5-lts.1",
+    "pino": "^8.17.2",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-node": "^4.1.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.1.2",
+    "husky": "^8.0.3",
+    "nodemon": "^3.0.2",
+    "pino-pretty": "^10.3.1",
+    "prettier": "^3.1.1"
   }
 }

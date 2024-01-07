@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+import mongoose from 'mongoose';
+const Schema = mongoose.Schema;
 
 const GeneralSchema = new Schema({
   specialOffers: [String],
@@ -7,10 +7,10 @@ const GeneralSchema = new Schema({
     {
       name: String,
       image: String,
-      province: String
-    }
-  ]
-})
+      province: String,
+    },
+  ],
+});
 
-const General = mongoose.model('general', GeneralSchema)
-module.exports = General
+const General = mongoose.model('general', GeneralSchema);
+export default General;
