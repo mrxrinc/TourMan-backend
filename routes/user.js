@@ -7,7 +7,7 @@ import {
   avatarUpload,
   report,
 } from '../controllers/user.js';
-import handleAvatarUpload from '../services/upload.js';
+import { handleAvatarUpload } from '../services/upload.js';
 
 const router = express.Router();
 

@@ -1,7 +1,7 @@
 import { BASE_URL, PORT } from '../config/environments.js';
 import { ReportUser, Review, User } from '../models/index.js';
-import getUserReviewsData from '../utils/getReviewsData.js';
 import persianDate from '../utils/date.js';
+import getUserReviewsData from '../utils/helpers.js';
 import { checkInputs } from '../utils/validations.js';
 import {
   userSchema,

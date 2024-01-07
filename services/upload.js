@@ -2,20 +2,25 @@ import path from 'path';
 
 import multer from 'multer';
 
-import { AVATARS_DIR } from '../config/constants.js';
-import uniqueSuffix from '../utils/random.js';
+import { AVATARS_DIR, HOME_IMAGES_DIR } from '../config/constants.js';
+import { uniqueSuffix } from '../utils/helpers.js';
 
-const userStorage = multer.diskStorage({
-  destination: (_req, _file, cb) => {
-    cb(null, AVATARS_DIR);
-  },
-  filename: (req, file, cb) => {
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  },
-});
+import Error from './error.js';
 
-const userFileFilter = (req, file, cb) => {
-  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+const limits = { fileSize: 1024 * 1024 * 6 }; // 6MB
+
+const getStorage = (dir) =>
+  multer.diskStorage({
+    destination: (_req, _file, cb) => {
+      cb(null, dir);
+    },
+    filename: (_req, file, cb) => {
+      cb(null, uniqueSuffix + path.extname(file.originalname));
+    },
+  });
+
+const fileFilter = (req, file, cb) => {
+  if (['image/jpeg', 'image/png'].includes(file.mimetype)) {
     cb(null, true);
   } else {
     cb(
@@ -24,10 +29,14 @@ const userFileFilter = (req, file, cb) => {
   }
 };
 
-const handleAvatarUpload = multer({
-  storage: userStorage,
-  fileFilter: userFileFilter,
-  limits: { fileSize: 1024 * 1024 * 6 },
+export const handleAvatarUpload = multer({
+  limits,
+  fileFilter,
+  storage: getStorage(`../${AVATARS_DIR}`),
 });
 
-export default handleAvatarUpload;
+export const handleUploadHomeImage = multer({
+  limits,
+  fileFilter,
+  storage: getStorage(`../${HOME_IMAGES_DIR}`),
+});
