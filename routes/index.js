@@ -1,5 +1,6 @@
 import express from 'express';
 
+import { invalidPathHandler } from '../middlewares/errors.js';
 import isLoggedIn from '../middlewares/isLoggedIn.js';
 
 import authRoutes from './auth.js';
@@ -21,5 +22,7 @@ router.use('/reserve', isLoggedIn, reserveRoutes);
 router.use('/review', isLoggedIn, reviewRoutes);
 router.use('/privacy', isLoggedIn, privacyRoutes);
 router.use('/misc', isLoggedIn, miscRoutes);
+
+router.use('*', invalidPathHandler);
 
 export default router;

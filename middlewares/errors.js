@@ -11,8 +11,7 @@ export const errorLogger = (error, _request, _response, next) => {
   next(error);
 };
 
-export const errorResponder = (error, _request, response, next) => {
-  console.log('========== ERROR RESPONDER ==========');
+export const errorResponder = (error, _request, response) => {
   response.header('Content-Type', 'application/json');
 
   const status = error?.status || 500;
@@ -22,6 +21,6 @@ export const errorResponder = (error, _request, response, next) => {
   response.status(status).send(data);
 };
 
-export const invalidPathHandler = (_request, response, next) => {
-  response.status(404).send('404 Invalid Path');
+export const invalidPathHandler = (req, res) => {
+  res.status(404).send(`Not found: ${req.originalUrl}`);
 };
