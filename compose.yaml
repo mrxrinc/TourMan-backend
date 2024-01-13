@@ -1,0 +1,46 @@
+services:
+  api:
+    container_name: tourman-api
+    build:
+      context: .
+    ports:
+      - 3000:3000
+    depends_on:
+      database:
+        condition: service_healthy
+    # restart: always
+    networks:
+      - tournet
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      API_PATH: /api/v1
+      BASE_URL: http://localhost
+      MONGO_URL: mongodb://mrxrinc:mrxrinc.com@database:27017/tourman
+      JWT_SECRET: TourMan_mrxrinc
+      JWT_EXPIRE: 10d
+
+  database:
+    container_name: tourman-database
+    image: mongo
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - '27017:27017'
+    networks:
+      - tournet
+    healthcheck:
+      test: ['CMD', 'mongo', '--eval', "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mrxrinc
+      - MONGO_INITDB_ROOT_PASSWORD=mrxrinc.com
+volumes:
+  mongo-data:
+    driver: local
+networks:
+  tournet:
