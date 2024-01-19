@@ -5,7 +5,8 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon node server.js",
+    "dev": "nodemon node server.js",
+    "build": "node server.js",
     "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "precommit": "eslint ."
@@ -22,6 +23,7 @@
     "mongoose": "^8.0.3",
     "multer": "^1.4.5-lts.1",
     "pino": "^8.17.2",
+    "pino-pretty": "^10.3.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -33,7 +35,6 @@
     "eslint-plugin-prettier": "^5.1.2",
     "husky": "^8.0.3",
     "nodemon": "^3.0.2",
-    "pino-pretty": "^10.3.1",
     "prettier": "^3.1.1"
   }
 }
