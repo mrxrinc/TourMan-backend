@@ -1,6 +1,6 @@
 db = db.getSiblingDB('tourman');
 db.createUser({
-  user: 'mrxrinc',
-  pwd: 'mrxrinc.com',
+  user: 'test',
+  pwd: '',
   roles: [{ role: 'readWrite', db: 'tourman' }],
 });
